@@ -2,6 +2,8 @@ package src.gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -10,6 +12,10 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import src.algorithm.*;
+import src.framework.CribPlayer;
+import src.framework.SimulationConfig;
+import src.framework.SimulationResult;
+import src.framework.SimulationRunner;
 
 import java.util.HashMap;
 import java.util.Observable;
@@ -41,6 +47,7 @@ public class ControlPanel extends GridPane {
         setupDealerRadio();
         setupAlgorithmMaps();
         setupAlgorithmChoices();
+        setupRunButton();
 
         setupWinTexts();
 
@@ -51,9 +58,12 @@ public class ControlPanel extends GridPane {
     }
 
     private void setupRunButtonCol(int col) {
-        this.runButton= new Button("Run Simulation");
-
         add(runButton,col,0,1,REMAINING);
+    }
+
+    private void setupRunButton(){
+        this.runButton= new Button("Run Simulation");
+        runButton.setOnAction(event -> runButtonPushed());
     }
 
     private void setupWinTexts(){
@@ -129,5 +139,49 @@ public class ControlPanel extends GridPane {
         add(blueCribChoices,col,2);
         add(bluePegChoices,col,3);
         add(blueWins,col,4);
+    }
+
+    private void runButtonPushed() {
+        CribPlayer redPlayer= getRedPlayer();
+        CribPlayer bluePlayer= getBluePlayer();
+        int numSims= 10000;
+
+        boolean dealerIsRed= false;
+
+        SimulationConfig config;
+        if(dealerRadio.getSelectedToggle() == redDealer){
+            dealerIsRed= true;
+        }
+        if(dealerIsRed){
+            config= new SimulationConfig(redPlayer,bluePlayer,numSims);
+        }
+        else{
+            config= new SimulationConfig(bluePlayer,redPlayer,numSims);
+        }
+
+        SimulationRunner runner= new SimulationRunner(config);
+        runner.run();
+
+        SimulationResult result= runner.getResult();
+
+        double redWins= dealerIsRed ? result.getDealerPercent() : result.getCutterPercent();
+        double blueWins= 1-redWins;
+
+        this.redWins.setText(String.valueOf(redWins));
+        this.blueWins.setText(String.valueOf(blueWins));
+    }
+
+    private CribPlayer getRedPlayer(){
+        CribAlgorithm cribAlg= cribAlgMap.get(redCribChoices.getValue());
+        PeggingAlgorithm pegAlg= pegAlgMap.get(redPegChoices.getValue());
+
+        return new CribPlayer(cribAlg,pegAlg);
+    }
+
+    private CribPlayer getBluePlayer(){
+        CribAlgorithm cribAlg= cribAlgMap.get(blueCribChoices.getValue());
+        PeggingAlgorithm pegAlg= pegAlgMap.get(bluePegChoices.getValue());
+
+        return new CribPlayer(cribAlg,pegAlg);
     }
 }

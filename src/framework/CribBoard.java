@@ -38,6 +38,7 @@ public class CribBoard{
 	public CribPlayer playGame(){
 		dealer= p1;
 		cutter= p2;
+		this.score= new CribScore(p1,p2);
 		
 		//"try" to find a winner
 		try{
