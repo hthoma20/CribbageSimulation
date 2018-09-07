@@ -1,6 +1,6 @@
 package src.algorithm;
 
-import src.Card.Card;
+import src.card.Card;
 
 public class RandomCribAlgorithm implements CribAlgorithm {
 	public Card[] makeCrib(Card[] hand, boolean isDealer){

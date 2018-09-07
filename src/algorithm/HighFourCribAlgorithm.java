@@ -1,7 +1,7 @@
 package src.algorithm;
 
-import src.Card.Card;
-import src.Card.CribHand;
+import src.card.Card;
+import src.card.CribHand;
 
 public class HighFourCribAlgorithm implements CribAlgorithm {
 	public Card[] makeCrib(Card[] hand, boolean isDealer){

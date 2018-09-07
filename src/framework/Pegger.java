@@ -1,6 +1,6 @@
 package src.framework;
 
-import src.Card.Card;
+import src.card.Card;
 
 public interface Pegger{
 

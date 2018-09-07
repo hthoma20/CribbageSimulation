@@ -1,4 +1,4 @@
-package src.Card;
+package src.card;
 
 public enum Rank
 {

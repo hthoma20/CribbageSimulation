@@ -1,4 +1,4 @@
-package src.Card;
+package src.card;
 
 import java.util.ArrayList;
 

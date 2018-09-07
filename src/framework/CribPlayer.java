@@ -2,7 +2,8 @@ package src.framework;
 
 import src.algorithm.CribAlgorithm;
 import src.algorithm.PeggingAlgorithm;
-import src.Card.Card;
+import src.card.Card;
+import src.card.CribHand;
 
 import java.util.ArrayList;
 

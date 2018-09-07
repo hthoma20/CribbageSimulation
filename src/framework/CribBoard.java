@@ -5,9 +5,10 @@ this keeps track of score and decides when players will play and count
 
 import src.algorithm.HighFourCribAlgorithm;
 import src.algorithm.RandomPeggingAlgorithm;
-import src.Card.Card;
-import src.Card.CribHand;
-import src.Card.Rank;
+import src.card.Card;
+import src.card.CribHand;
+import src.card.Rank;
+import src.card.CribDeck;
 
 public class CribBoard{
 	//players

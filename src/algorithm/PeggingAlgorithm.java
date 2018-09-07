@@ -1,6 +1,6 @@
 package src.algorithm;
 
-import src.Card.Card;
+import src.card.Card;
 import src.framework.PegTable;
 
 import java.util.ArrayList;

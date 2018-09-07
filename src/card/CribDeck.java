@@ -1,8 +1,8 @@
-package src.framework;
+package src.card;
 
-import src.Card.Card;
-import src.Card.Rank;
-import src.Card.Suit;
+import src.card.Card;
+import src.card.Rank;
+import src.card.Suit;
 
 import java.util.ArrayList;
 
