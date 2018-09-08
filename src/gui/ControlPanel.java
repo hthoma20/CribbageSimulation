@@ -2,10 +2,7 @@ package src.gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import src.algorithm.*;
@@ -113,12 +110,26 @@ public class ControlPanel extends GridPane {
     }
 
     private void setupLabelCol(int col){
+        Button cribButton= new Button("Crib Selection Algorithm:");
+        cribButton.setOnAction(event -> openCribAlgDefinitions());
+
+        Button pegButton= new Button("Pegging Algorithm:");
+        pegButton.setOnAction(event -> openPegAlgDefinitions());
+
         add(new Text("Player:"),col,0);
         add(new Text("Dealer:"),col,1);
-        add(new Text("Crib Selection Algorithm:"),col,2);
-        add(new Text("Pegging Algorithm:"),col,3);
+        add(cribButton,col,2);
+        add(pegButton,col,3);
         add(new Text("Score:"),col,4);
         add(new Text("Wins:"),col,5);
+    }
+
+    private void openPegAlgDefinitions() {
+        new PegAlgorithmDefinitions().show();
+    }
+
+    private void openCribAlgDefinitions() {
+        new CribAlgorithmDefinitions().show();
     }
 
     private void setupRedCol(int col){
