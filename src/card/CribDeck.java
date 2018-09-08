@@ -58,6 +58,28 @@ public class CribDeck
 		
 		return hand;
 	}
+
+	//removes card from this deck which match
+	//any card in the deck with Card.equals
+	public void removeMatches(Card[] removeCards){
+		ArrayList<Card> toRemove= new ArrayList<Card>(removeCards.length);
+
+		for(Card card : removeCards){
+			for(Card inDeck : cards){
+				if(card.equals(inDeck)){
+					toRemove.add(inDeck);
+				}
+			}
+		}
+
+		for(Card c : toRemove){
+			cards.remove(c);
+		}
+	}
+
+	public Card[] getDeckArray(){
+		return Card.cardListToArray(cards);
+	}
 	
 	//returns a single card
 	public Card cut(){

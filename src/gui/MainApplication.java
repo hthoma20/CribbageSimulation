@@ -1,24 +1,33 @@
 package src.gui;
 
 import javafx.application.Application;
+import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
-    private ControlPanel controlPanel;
-
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) {
-        Group root= new Group();
+        HBox root= new HBox();
+        root.setSpacing(20);
 
-        controlPanel= new ControlPanel();
+        ControlPanel controlPanel= new ControlPanel();
+        RunBox runBox= new RunBox(controlPanel);
 
         root.getChildren().add(controlPanel);
+        root.getChildren().add(runBox);
+
+        //draw borders
+        controlPanel.setStyle("-fx-border-color: black;"+
+                              "-fx-border-width: 3;");
 
         Scene scene= new Scene(root);
 

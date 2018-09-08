@@ -2,20 +2,14 @@ package src.gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import src.algorithm.*;
 import src.framework.CribPlayer;
-import src.framework.SimulationConfig;
-import src.framework.SimulationResult;
-import src.framework.SimulationRunner;
 
 import java.util.HashMap;
 import java.util.Observable;
@@ -31,10 +25,11 @@ public class ControlPanel extends GridPane {
     private ComboBox<String> bluePegChoices;
     private ComboBox<String> blueCribChoices;
 
-    private Button runButton;
-
     private Text redWins;
     private Text blueWins;
+
+    private TextField redScore;
+    private TextField blueScore;
 
     private HashMap<String, CribAlgorithm> cribAlgMap;
     private HashMap<String, PeggingAlgorithm> pegAlgMap;
@@ -45,30 +40,28 @@ public class ControlPanel extends GridPane {
         setVgap(20);
 
         setupDealerRadio();
+        setupScoreFields();
         setupAlgorithmMaps();
         setupAlgorithmChoices();
-        setupRunButton();
 
         setupWinTexts();
 
         setupLabelCol(0);
         setupRedCol(1);
         setupBlueCol(2);
-        setupRunButtonCol(3);
-    }
-
-    private void setupRunButtonCol(int col) {
-        add(runButton,col,0,1,REMAINING);
-    }
-
-    private void setupRunButton(){
-        this.runButton= new Button("Run Simulation");
-        runButton.setOnAction(event -> runButtonPushed());
     }
 
     private void setupWinTexts(){
         this.redWins= new Text("0.00%");
         this.blueWins= new Text("0.00%");
+    }
+
+    private void setupScoreFields(){
+        this.redScore= new TextField("0");
+        this.blueScore= new TextField("0");
+
+        redScore.setPrefColumnCount(2);
+        blueScore.setPrefColumnCount(2);
     }
 
     private void setupAlgorithmChoices() {
@@ -90,6 +83,8 @@ public class ControlPanel extends GridPane {
         this.cribAlgMap= new HashMap<>();
         cribAlgMap.put("Random",new RandomCribAlgorithm());
         cribAlgMap.put("High-Four",new HighFourCribAlgorithm());
+        cribAlgMap.put("High-Six",new HighSixCribAlgorithm());
+        cribAlgMap.put("EV",new ExpectedValueCribAlgorithm());
 
         this.pegAlgMap= new HashMap<>();
         pegAlgMap.put("Random",new RandomPeggingAlgorithm());
@@ -122,7 +117,8 @@ public class ControlPanel extends GridPane {
         add(new Text("Dealer:"),col,1);
         add(new Text("Crib Selection Algorithm:"),col,2);
         add(new Text("Pegging Algorithm:"),col,3);
-        add(new Text("Wins:"),col,4);
+        add(new Text("Score:"),col,4);
+        add(new Text("Wins:"),col,5);
     }
 
     private void setupRedCol(int col){
@@ -130,7 +126,8 @@ public class ControlPanel extends GridPane {
         add(redDealer,col,1);
         add(redCribChoices,col,2);
         add(redPegChoices,col,3);
-        add(redWins,col,4);
+        add(redScore,col,4);
+        add(redWins,col,5);
     }
 
     private void setupBlueCol(int col){
@@ -138,37 +135,8 @@ public class ControlPanel extends GridPane {
         add(blueDealer,col,1);
         add(blueCribChoices,col,2);
         add(bluePegChoices,col,3);
-        add(blueWins,col,4);
-    }
-
-    private void runButtonPushed() {
-        CribPlayer redPlayer= getRedPlayer();
-        CribPlayer bluePlayer= getBluePlayer();
-        int numSims= 10000;
-
-        boolean dealerIsRed= false;
-
-        SimulationConfig config;
-        if(dealerRadio.getSelectedToggle() == redDealer){
-            dealerIsRed= true;
-        }
-        if(dealerIsRed){
-            config= new SimulationConfig(redPlayer,bluePlayer,numSims);
-        }
-        else{
-            config= new SimulationConfig(bluePlayer,redPlayer,numSims);
-        }
-
-        SimulationRunner runner= new SimulationRunner(config);
-        runner.run();
-
-        SimulationResult result= runner.getResult();
-
-        double redWins= dealerIsRed ? result.getDealerPercent() : result.getCutterPercent();
-        double blueWins= 1-redWins;
-
-        this.redWins.setText(String.valueOf(redWins));
-        this.blueWins.setText(String.valueOf(blueWins));
+        add(blueScore,col,4);
+        add(blueWins,col,5);
     }
 
     private CribPlayer getRedPlayer(){
@@ -183,5 +151,55 @@ public class ControlPanel extends GridPane {
         PeggingAlgorithm pegAlg= pegAlgMap.get(bluePegChoices.getValue());
 
         return new CribPlayer(cribAlg,pegAlg);
+    }
+
+    public CribPlayer getDealer(){
+        if(dealerRadio.getSelectedToggle() == redDealer){
+            return getRedPlayer();
+        }
+
+        return getBluePlayer();
+    }
+
+    public CribPlayer getCutter(){
+        if(dealerRadio.getSelectedToggle() == blueDealer){
+            return getRedPlayer();
+        }
+
+        return getBluePlayer();
+    }
+
+    public int getDealerScore(){
+        if(dealerRadio.getSelectedToggle() == redDealer){
+            return Integer.valueOf(redScore.getText());
+        }
+
+        return Integer.valueOf(blueScore.getText());
+    }
+
+    public int getCutterScore(){
+        if(dealerRadio.getSelectedToggle() == blueDealer){
+            return Integer.valueOf(redScore.getText());
+        }
+
+        return Integer.valueOf(blueScore.getText());
+    }
+
+    public void setDealerWinsText(String text){
+        if(dealerRadio.getSelectedToggle() == redDealer){
+            redWins.setText(text);
+        }
+        else{
+            blueWins.setText(text);
+        }
+    }
+
+    public void setCutterWinsText(String text){
+        if(dealerRadio.getSelectedToggle() == blueDealer){
+            redWins.setText(text);
+        }
+        else{
+            blueWins.setText(text);
+        }
     }
 }

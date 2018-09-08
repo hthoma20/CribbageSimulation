@@ -14,6 +14,9 @@ public class CribBoard{
 	//players
 	private CribPlayer p1;
 	private CribPlayer p2;
+
+	private int startScore1;
+	private int startScore2;
 	
 	//score keeper
 	private CribScore score;
@@ -23,22 +26,25 @@ public class CribBoard{
 	
 	//which player is dealing
 	private CribPlayer dealer;
-	private CribPlayer cutter; 
+	private CribPlayer cutter;
 	
-	private int gamePoint= 121;
-	
-	public CribBoard(CribPlayer p1, CribPlayer p2){
+	public CribBoard(CribPlayer p1, CribPlayer p2, int score1, int score2){
 		this.p1= p1;
 		this.p2= p2;
-		
-		this.score= new CribScore(p1,p2);
+
+		this.startScore1= score1;
+		this.startScore2= score2;
+	}
+
+	public CribBoard(CribPlayer p1, CribPlayer p2){
+		this(p1,p2,0,0);
 	}
 	
 	//play a game and return the winner
 	public CribPlayer playGame(){
 		dealer= p1;
 		cutter= p2;
-		this.score= new CribScore(p1,p2);
+		this.score= new CribScore(p1,p2,startScore1,startScore2);
 		
 		//"try" to find a winner
 		try{

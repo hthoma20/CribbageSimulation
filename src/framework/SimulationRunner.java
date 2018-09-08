@@ -1,6 +1,8 @@
 package src.framework;
 
-public class SimulationRunner implements Runnable {
+import javafx.concurrent.Task;
+
+public class SimulationRunner extends Task<Integer> {
     private SimulationConfig config;
     private SimulationResult result;
 
@@ -11,13 +13,15 @@ public class SimulationRunner implements Runnable {
         this.result= null;
     }
 
-    public void run(){
+    public Integer call(){
         isRunning= true;
 
         int dealerWins= 0;
         int cutterWins= 0;
 
-        CribBoard board= new CribBoard(config.getDealer(),config.getCutter());
+        CribBoard board=
+                new CribBoard(config.getDealer(),config.getCutter(),
+                              config.getDealerScore(),config.getCutterScore());
 
         for(int i=0;i<config.getNumSims();i++){
             CribPlayer winner= board.playGame();
@@ -27,11 +31,15 @@ public class SimulationRunner implements Runnable {
             else{
                 cutterWins++;
             }
+
+            updateProgress(i,config.getNumSims());
         }
 
         this.result= new SimulationResult(dealerWins,cutterWins);
 
         isRunning= false;
+
+        return 0;
     }
 
     public void setConfig(SimulationConfig config){
@@ -44,10 +52,6 @@ public class SimulationRunner implements Runnable {
         checkAndThrow();
 
         return result;
-    }
-
-    public boolean isRunning(){
-        return isRunning;
     }
 
     private void checkAndThrow(){

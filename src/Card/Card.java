@@ -13,6 +13,7 @@ public class Card
 	}
 	
 	//parses a card from a string
+	//input should be in form: 10C for 10 of Clubs
 	public Card(String str){
 		str= str.toUpperCase();
 		
@@ -85,6 +86,10 @@ public class Card
 	public int compareTo(Card c){
 		return this.rank.compareTo(c.rank);
 	}
+
+	public boolean equals(Card c){
+		return this.rank == c.rank && this.suit == c.suit;
+	}
 	
 	//returns the cribbage value of this card
 	public int value(){
@@ -117,5 +122,12 @@ public class Card
 		}
 
 		return copy;
+	}
+
+	public static void print(Card[] cards){
+		for(int i=0;i<cards.length-1;i++){
+			System.out.print(cards[i]+",");
+		}
+		System.out.println(cards[cards.length-1]);
 	}
 }

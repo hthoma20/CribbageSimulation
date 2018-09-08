@@ -5,39 +5,47 @@ import src.card.CribHand;
 
 public class HighFourCribAlgorithm implements CribAlgorithm {
 	public Card[] makeCrib(Card[] hand, boolean isDealer){
-		Card[] crib= new Card[2];
-		
 		Card[][] combos= makeEachCombo(hand);
 		
 		//find which combo is the best
-		int maxScore= -1;
-		Card[] best= null;
+		int maxScore= -3; //it is inconceivable that a score could be less than -2
+		Card[] bestCrib= null;
 		
-		for(Card[] cards : combos){
-			CribHand scoring= new CribHand(cards);
-			int score= scoring.getScore();
+		for(Card[] keep : combos){
+			Card[] crib= findCrib(hand,keep);
+			int score= score6(keep,crib,isDealer);
 			if(score > maxScore){
 				maxScore= score;
-				best= cards;
+				bestCrib= crib;
 			}
 		}
-		
-		//now we have the best hand
-		//which cards are not part of it?
+
+		return bestCrib;
+	}
+
+	private Card[] findCrib(Card[] hand, Card[] keep){
+		Card[] crib= new Card[hand.length-keep.length];
+
 		int index= 0;
 		for(Card c : hand){
-			//if the best hand doesn't contain c,
-			//add it to the crib
-			if(!contains(best,c)){
+			//if the card is not to keep
+			if(!contains(keep,c)){
+				//add it to the crib
 				crib[index++]= c;
 			}
 		}
-		
+
 		return crib;
+	}
+
+	//returns the score of these 4 cards
+	protected int score6(Card[] keep, Card[] crib, boolean isDealer){
+		CribHand scoring= new CribHand(keep);
+		return scoring.getScore();
 	}
 	
 	//makes each 4-card combination
-	protected Card[][] makeEachCombo(Card[] hand){
+	private Card[][] makeEachCombo(Card[] hand){
 		int numCombos= choose2(hand.length); 
 		Card[][] combos= new Card[numCombos][];
 		int index= 0;

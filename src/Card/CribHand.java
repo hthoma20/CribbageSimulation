@@ -216,8 +216,12 @@ public class CribHand{
 	//in this hand,
 	//typically four or five
 	private int scoreFlush(){
+		//if we have not cut, consider the entire hand
+		//to be the flush hand
+		//if we do have a cut, only look at the non-cut cards
+		Card[] hand= hasCut ? this.hand : this.sortedHand;
+
 		Suit flushSuit= hand[0].suit;
-		
 		//check the hand
 		for(int i=1;i<hand.length;i++){
 			//if we find a non-matching card,
