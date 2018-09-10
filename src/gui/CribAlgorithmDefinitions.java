@@ -34,6 +34,10 @@ public class CribAlgorithmDefinitions extends Stage {
                 "Looks at each possible cut to determine the cards it should keep in order to\n" +
                 "maximize the expected value of its hand.\n\n");
 
+        Text defenceHeader= new Text("Defensive:\n");
+        Text defenceDefinition= new Text("Performs like High-Six, but with strict aversion to putting points into its opponents crib.\n" +
+                "It will choose the best option that gives its opponent no points.\n\n");
+
         flow.getChildren().add(randomHeader);
         flow.getChildren().add(randomDefinition);
         flow.getChildren().add(highFourHeader);
@@ -42,5 +46,7 @@ public class CribAlgorithmDefinitions extends Stage {
         flow.getChildren().add(highSixDefinition);
         flow.getChildren().add(evHeader);
         flow.getChildren().add(evDefinition);
+        flow.getChildren().add(defenceHeader);
+        flow.getChildren().add(defenceDefinition);
     }
 }

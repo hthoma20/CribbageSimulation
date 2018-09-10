@@ -82,10 +82,12 @@ public class ControlPanel extends GridPane {
         cribAlgMap.put("High-Four",new HighFourCribAlgorithm());
         cribAlgMap.put("High-Six",new HighSixCribAlgorithm());
         cribAlgMap.put("EV",new ExpectedValueCribAlgorithm());
+        cribAlgMap.put("Defensive",new DefensiveCribAlgorithm());
 
         this.pegAlgMap= new HashMap<>();
         pegAlgMap.put("Random",new RandomPeggingAlgorithm());
         pegAlgMap.put("High Play",new HighPlayPeggingAlgorithm());
+        pegAlgMap.put("Defensive",new DefensivePeggingAlgorithm());
     }
 
     private ObservableList<String> getCribStrings(){

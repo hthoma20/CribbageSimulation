@@ -96,7 +96,7 @@ public class CribBoard{
 		score.score(dealer,scoring.getScore());
 		
 		//the crib
-		scoring= new CribHand(crib,cut);
+		scoring= new CribHand(crib,cut,true);
 		score.score(dealer,scoring.getScore());
 	}
 	

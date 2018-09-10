@@ -17,18 +17,26 @@ public class CribHand{
 	//a hand with no cut will still have a cut, but this boolean will be false
 	//to indicate the cut is meaningless
 	private boolean hasCut;
+
+	//used to determine whether a flsuh must include the cut
+	private boolean isCrib;
 	
 	//negative one to indicate score is uncalculated
-	private int score= -1;
+	private int score;
 
-	public CribHand(Card[] hand, Card cut){
+	public CribHand(Card[] hand, Card cut, boolean isCrib){
 		this.hand= hand;
 		this.cut= cut;
 		this.hasCut= true;
+		this.isCrib= isCrib;
 		
 		this.sortedHand= sortHand();
 		
 		this.score= findScore();
+	}
+
+	public CribHand(Card[] hand, Card cut){
+		this(hand,cut,false);
 	}
 	
 	//creates a crib hand with no cut
@@ -216,6 +224,9 @@ public class CribHand{
 	//in this hand,
 	//typically four or five
 	private int scoreFlush(){
+		//if this is a wimpy hand, there is no flush
+		if(sortedHand.length < 4) return 0;
+
 		//if we have not cut, consider the entire hand
 		//to be the flush hand
 		//if we do have a cut, only look at the non-cut cards
@@ -236,8 +247,8 @@ public class CribHand{
 		if(hasCut && cut.suit == flushSuit){
 			return hand.length + 1;
 		}
-		//otherwise, its just the hand
-		return hand.length;
+		//otherwise, its just the hand, and in the crib is worth nothing
+		return isCrib ? 0 : hand.length;
 	}
 	
 	public int getScore(){

@@ -87,6 +87,34 @@ public class PegTable{
 
 		return score;
 	}
+
+	/**
+	 * Calcuates the value of playing each given card in sequence
+	 * if the play makes the table go over 31, the score is returned as -1
+	 * Does not alter the current pegger or the game score
+	 *
+	 * @param plays sequence of cards to play
+	 * @return array of scores each play made
+	 */
+	public int[] playScoreQuery(Card[] plays){
+		int[] scores= new int[plays.length];
+
+		for(int i=0;i<plays.length;i++){
+			try {
+				pegDeck.add(plays[i]);
+				scores[i]= getPlayScore();
+			}
+			catch(UncaughtGoException ucGO){
+				scores[i]= -1;
+			}
+		}
+
+		for(Card play : plays){
+			pegDeck.remove(play);
+		}
+
+		return scores;
+	}
 	
 	private void switchPegger() {
 		if(currPegger == cutter){
@@ -211,6 +239,10 @@ public class PegTable{
 		
 		//the sum of the cards
 		int cardSum= sumPegDeck();
+
+		if(cardSum > getGoPoint()) {
+			throw new UncaughtGoException(pegDeck.get(pegDeck.size()-1));
+		}
 		
 		//sum of 15
 		if (cardSum == 15) {
